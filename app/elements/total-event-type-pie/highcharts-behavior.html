@@ -16,7 +16,7 @@
 <script src="../../bower_components/highcharts/highstock.js"></script>
 <script src="../../bower_components/highcharts/modules/exporting.js"></script>
 <script src="../../bower_components/highcharts/modules/drilldown.js"></script>
-
+<script src="../../bower_components/highcharts/highcharts-3d.js"></script>
 <script>
     'use strict';
     Highcharts.setOptions({global: {useUTC: false}});
@@ -55,8 +55,14 @@
             var Series = this.data.length && this.data[0].data instanceof Array?this.data:[{name: (this.label||this.yLabel||this.xLabel),colorByPoint: this.colorByPoint, data: this.data}]
             var __app = this
             this._set_chart(new Highcharts[namespace||"Chart"]($.extend(true,{},{
+                //colors: ['#f45b5b', '#8085e9', '#8d4654', '#7798BF', '#aaeeee','#ff0066', '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+       
                 chart: $.extend({
                     renderTo: __app.$.Chart,
+        /*options3d: {
+            enabled: true,
+            alpha: 45
+        },*/
                     defaultSeriesType: this.type,
                     animation: Highcharts.svg, // don't animate in old IE
                     marginRight: 10,
@@ -79,11 +85,18 @@
                 subtitle: {text: this.subtitle},
                 xAxis: xAxis,
                 yAxis: yAxis,
+
                 credits: {enabled: this.credits},
                 plotOptions: $.extend({
                     pie: {
                         allowPointSelect: true,
                         cursor: 'pointer',
+                        //colors: ['#f45b5b', '#8085e9', '#8d4654', '#7798BF', '#aaeeee','#ff0066', '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+                        //borderWidth: '2px',
+                        //borderColor: '#000000',
+            //innerSize: 100,
+            //depth: 45,
+
                         dataLabels: {
                             enabled: true,
                             format: '<b>{point.name}</b>: {point.percentage:.1f} %',
@@ -166,4 +179,6 @@
         _vsTimeUpdate: function(a) {if(!this._chart || typeof a == "undefined"){return};this.destroy();this.ready()},
         _checkSelected: function() {if(!this._chart){return};var points = this._chart.getSelectedPoints();this._setSelected(!!points.length);this._setSelectedPoints(points)}
     };
+
+
 </script>

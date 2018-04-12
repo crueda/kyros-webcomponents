@@ -27,6 +27,73 @@ var historyApiFallback = require('connect-history-api-fallback');
 var packageJson = require('./package.json');
 var crypto = require('crypto');
 var ensureFiles = require('./tasks/ensure-files.js');
+var scp = require('gulp-scp');
+var rsync = require("rsyncwrapper");
+var gutil = require('gulp-util');
+
+// --------------------------------------------------------------------------------
+// Actualizar en produccion
+// --------------------------------------------------------------------------------
+gulp.task('pro1', ['upload-bower-1', 'upload-elements-1'], function() {
+  console.log('Actualizado el entorno de producción KyrosView 1 !');
+});
+
+gulp.task('pro2', ['upload-bower-2', 'upload-elements-2'], function() {
+  console.log('Actualizado el entorno de producción KyrosView 2 !');
+});
+
+
+gulp.task('upload-bower-1', function() {
+  rsync({
+    ssh: true,
+    src: '/Users/Carlos/Workspace/Kyros/kyros_webcomponent/app/bower_components',
+    dest: 'root@192.168.28.136:/home/kyros/www/images/webcomponents',
+    recursive: true,
+    syncDest: true,
+    args: ['--verbose']
+  }, function(error, stdout, stderr, cmd) {
+      gutil.log(stdout);
+  });
+});
+
+gulp.task('upload-elements-1', function() {
+  rsync({
+    ssh: true,
+    src: '/Users/Carlos/Workspace/Kyros/kyros_webcomponent/app/elements',
+    dest: 'root@192.168.28.136:/home/kyros/www/images/webcomponents',
+    recursive: true,
+    syncDest: true,
+    args: ['--verbose']
+  }, function(error, stdout, stderr, cmd) {
+      gutil.log(stdout);
+  });
+});
+
+gulp.task('upload-bower-2', function() {
+  rsync({
+    ssh: true,
+    src: '/Users/Carlos/Workspace/Kyros/kyros_webcomponent/app/bower_components',
+    dest: 'root@192.168.28.137:/home/kyros/www/images/webcomponents',
+    recursive: true,
+    syncDest: true,
+    args: ['--verbose']
+  }, function(error, stdout, stderr, cmd) {
+      gutil.log(stdout);
+  });
+});
+
+gulp.task('upload-elements-2', function() {
+  rsync({
+    ssh: true,
+    src: '/Users/Carlos/Workspace/Kyros/kyros_webcomponent/app/elements',
+    dest: 'root@192.168.28.137:/home/kyros/www/images/webcomponents',
+    recursive: true,
+    syncDest: true,
+    args: ['--verbose']
+  }, function(error, stdout, stderr, cmd) {
+      gutil.log(stdout);
+  });
+});
 
 // var ghPages = require('gulp-gh-pages');
 

@@ -8,7 +8,10 @@
     <template>
         <style include="highcharts-shared-styles"></style>
         <div id="Chart" width="100%" on-click="_checkSelected"></div>
-        <content></content>
+
+
+
+       <content></content>
         <span id="error_msg"></span>
         <iron-ajax
             id="kyrosapi"
@@ -52,13 +55,14 @@
                             if (EventEnum.properties[EventEnum[i]]!=undefined) {                    
                                 desc = EventEnum.properties[EventEnum[i]].description;
                             }
-                            eventData.push([val.eventTypeCounter[i]])
-                            //eventData.push({label: desc, value: val.eventTypeCounter[i]})
+                            //eventData.push([val.eventTypeCounter[i]])
+                            eventData.push({name: desc, y: val.eventTypeCounter[i]})
                         }
                     });
 
 
                     this.data = eventData;
+                    
                     this.__createChart();
                 }
         },
