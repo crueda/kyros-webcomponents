@@ -1,0 +1,14 @@
+{
+  "name": "total-event-type-pie-google",
+  "private": true,
+  "dependencies": {
+    "iron-ajax": "PolymerElements/iron-ajax#^1.0.0",
+    "polymer": "Polymer/polymer#^1.2.0",
+    "google-chart": "^2.0.1",
+    "jquery": "^3.3.1"
+  },
+  "devDependencies": {
+    "web-component-tester": "^4.0.0"
+  },
+  "ignore": []
+}

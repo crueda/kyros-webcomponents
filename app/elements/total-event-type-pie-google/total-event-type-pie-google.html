@@ -1,0 +1,89 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/google-chart/google-chart.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
+
+<dom-module id="total-event-type-pie-google">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+        <span id="error_msg"></span>
+        <iron-ajax
+            id="kyrosapi"
+            url=""
+            params='{"type":"all"}'
+            handle-as="json"
+            on-response="handleResponse"
+            on-error="handleErrorResponse">
+        </iron-ajax>
+        <paper-spinner alt="Cargando datos..." active="[[cargando]]"></paper-spinner>
+
+      <google-chart
+    id="piechart"
+    type="pie"
+    options='{"title": "", "is3D": true}'
+    cols='[{"label": "Event", "type": "string"},{"label": "Number", "type": "number"}]'
+    rows=''>
+  </google-chart>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'total-event-type-pie-google',
+
+      properties: {
+        loadingMessage: 'Cargando datos',
+        device_id: {type: Number, value: 0},
+        token: {type: String, value: ''},
+        title: {type: String, value: ''}
+      },
+      ready: function () {
+            $("#piechart").hide();
+            this.$.kyrosapi.url = "https://api-demos.kyroslbs.com/odometer/device/"+this.device_id;
+            this.$.kyrosapi.headers= {'x-access-token': this.token};
+            this.$.kyrosapi.generateRequest();
+        },
+        handleResponse: function (data) {
+                //console.log("-->" + data.detail.__data__.response);
+                if (data.detail.__data__.response.status == -1) {
+                    document.getElementById('error_msg').innerHTML = data.detail.__data__.response.description;
+                } else {
+                    var eventData = [];
+                    var new_rows = '['
+                    $.each( data.detail.__data__.response, function( key, val ) {
+                        for(var i in val.eventTypeCounter) {
+                            var desc = 'Desconocido';
+                            if (EventEnum.properties[EventEnum[i]]!=undefined) {                    
+                                desc = EventEnum.properties[EventEnum[i]].description;
+                            }
+                            //eventData.push([val.eventTypeCounter[i]])
+                            eventData.push([desc, val.eventTypeCounter[i]]);
+                            if (new_rows == '[') {
+                              new_rows = new_rows + '["' + desc + '",' + val.eventTypeCounter[i] + ']'
+                            } else {
+                              new_rows = new_rows + ',["' + desc + '",' + val.eventTypeCounter[i] + ']'
+                            }
+                        }
+                    });
+                    new_rows = new_rows + ']'
+
+                    $("#piechart").show();
+                    $("#piechart").attr("options", '{"title": "' + this.title + '", "is3D": true}');
+                    $("#piechart").attr("rows", new_rows);
+                    
+                }
+        },
+        handleErrorResponse: function (data) {
+            console.log("-->error: " + data);
+        }
+    });
+  })();
+  </script>
+</dom-module>
